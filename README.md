@@ -11,3 +11,7 @@
 HashMap<Integer, Student> hashMap = new HashMap<>();를 사용하여 처리한다
 
 버스 시간표 bus.csv를 사용한다.
+
+![image](https://github.com/user-attachments/assets/2c4088f3-fded-45bd-a2e1-6b7d86bcd212)
+
+사진처럼 현재시간을 최신화 하는 버튼을 추가하여 누르면 누른 시간대로 바뀐다.
