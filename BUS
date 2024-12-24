@@ -1,1 +1,32 @@
 버스 시간표 외형 만들기
+현재 시간과 다음 버스시간, 다다음 버스 시간, 생활관 버튼과 정문 버튼 표시하는 코드
+
+public class Test2 {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Test2::createAndShowGUI);
+    }
+
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("버스 시간표");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 250);
+
+        JPanel panel = new JPanel(new GridLayout(6, 1));
+
+        JLabel currentTimeLabel = new JLabel("현재 시간: 표시 안 됨");
+        JLabel nextBusLabel = new JLabel("다음 버스 시간: 없음");
+        JLabel secondNextBusLabel = new JLabel("다다음 버스 시간: 없음");
+
+        JButton dormitoryButton = new JButton("생활관");
+        JButton mainGateButton = new JButton("정문");
+
+        panel.add(currentTimeLabel);
+        panel.add(nextBusLabel);
+        panel.add(secondNextBusLabel);
+        panel.add(dormitoryButton);
+        panel.add(mainGateButton);
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+}
