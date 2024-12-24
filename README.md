@@ -15,3 +15,14 @@ HashMap<Integer, Student> hashMap = new HashMap<>();를 사용하여 처리한�
 ![image](https://github.com/user-attachments/assets/2c4088f3-fded-45bd-a2e1-6b7d86bcd212)
 
 사진처럼 현재시간을 최신화 하는 버튼을 추가하여 누르면 누른 시간대로 바뀐다.
+
+v4
+버스의 방향을 알려주는 기능을 추가한다.
+
+현재시간 :
+현재 시간 갱신 버튼
+버스 방향 :
+다음 버스 시간 :
+다다음 버스 시간 :
+생활관 버튼
+정문 버튼
