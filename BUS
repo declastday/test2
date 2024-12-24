@@ -1,5 +1,5 @@
 버스 시간표 외형 만들기
-현재 시간과 다음 버스시간, 다다음 버스 시간, 생활관 버튼과 정문 버튼 표시하는 코드
+현재 시간과 다음 버스시간, 다다음 버스 시간, 생활관 버튼과 정문 버튼 표시하는 코드 v1
 
 public class Test2 {
     public static void main(String[] args) {
