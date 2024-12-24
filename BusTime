@@ -1,0 +1,131 @@
+생활관과 정문 버튼을 한 줄에 넣게끔 코드를 수정하였음 v4.1
+
+public class Test {
+    private static List<String> busTimesDormitory = new ArrayList<>(); // A
+    private static List<String> busTimesMainGate = new ArrayList<>(); // B
+
+    public static void main(String[] args) {
+        // CSV 파일 로드
+        loadBusTimesFromCSV("bus/bus.csv");
+
+        // GUI 초기화
+        SwingUtilities.invokeLater(Test::createAndShowGUI);
+    }
+
+    // CSV 파일에서 버스 시간 로드
+    private static void loadBusTimesFromCSV(String filePath) {
+        if (!Files.exists(Paths.get(filePath))) {
+            JOptionPane.showMessageDialog(null, "CSV 파일이 존재하지 않습니다: " + filePath, "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",\s*"); // 콤마와 공백으로 구분
+
+                if (parts.length < 2) continue; // 형식에 맞지 않으면 건너뜀
+
+                String location = parts[0].trim(); // A 또는 B
+                for (int i = 1; i < parts.length; i++) {
+                    String time = parts[i].trim();
+                    if (isValidTimeFormat(time)) { // 시간 형식 검증
+                        if ("A".equalsIgnoreCase(location)) {
+                            busTimesDormitory.add(time);
+                        } else if ("B".equalsIgnoreCase(location)) {
+                            busTimesMainGate.add(time);
+                        }
+                    } else {
+                        System.err.println("잘못된 시간 형식: " + time);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "CSV 파일을 읽는 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // 시간 형식 검증
+    private static boolean isValidTimeFormat(String time) {
+        try {
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    // GUI 생성
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("버스 시간표");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+
+        JPanel panel = new JPanel(new GridLayout(6, 1));
+
+        JLabel currentTimeLabel = new JLabel("현재 시간: " + LocalTime.now().withNano(0));
+        JLabel busDirectionLabel = new JLabel("버스 방향: 없음");
+        JLabel nextBusLabel = new JLabel("다음 버스 시간: 없음");
+        JLabel secondNextBusLabel = new JLabel("다다음 버스 시간: 없음");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton dormitoryButton = new JButton("생활관");
+        JButton mainGateButton = new JButton("정문");
+
+        // 현재 시간 갱신 버튼
+        JButton refreshButton = new JButton("현재 시간 갱신");
+
+        // 버튼 동작
+        dormitoryButton.addActionListener(e -> {
+            busDirectionLabel.setText("버스 방향: 생활관에서 정문으로 가는 버스");
+            updateBusTimes(nextBusLabel, secondNextBusLabel, busTimesDormitory);
+        });
+
+        mainGateButton.addActionListener(e -> {
+            busDirectionLabel.setText("버스 방향: 정문에서 생활관으로 가는 버스");
+            updateBusTimes(nextBusLabel, secondNextBusLabel, busTimesMainGate);
+        });
+
+        // 현재 시간 갱신 버튼 클릭 시 동작
+        refreshButton.addActionListener(e -> currentTimeLabel.setText("현재 시간: " + LocalTime.now().withNano(0)));
+
+        buttonPanel.add(dormitoryButton);
+        buttonPanel.add(mainGateButton);
+
+        panel.add(currentTimeLabel);
+        panel.add(refreshButton); // 현재 시간 갱신 버튼 추가
+        panel.add(busDirectionLabel); // 버스 방향 라벨 추가
+        panel.add(nextBusLabel);
+        panel.add(secondNextBusLabel);
+        panel.add(buttonPanel);
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+
+    // 버스 시간 업데이트
+    private static void updateBusTimes(JLabel nextBusLabel, JLabel secondNextBusLabel, List<String> busTimes) {
+        LocalTime currentTime = LocalTime.now();
+        String nextBus = "없음";
+        String secondNextBus = "없음";
+
+        try {
+            for (String time : busTimes) {
+                LocalTime busTime = LocalTime.parse(time.trim(), DateTimeFormatter.ofPattern("HH:mm"));
+                if (busTime.isAfter(currentTime)) {
+                    if (nextBus.equals("없음")) {
+                        nextBus = busTime.toString();
+                    } else if (secondNextBus.equals("없음")) {
+                        secondNextBus = busTime.toString();
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "시간 형식이 잘못되었습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        }
+
+        nextBusLabel.setText("다음 버스 시간: " + nextBus);
+        secondNextBusLabel.setText("다다음 버스 시간: " + secondNextBus);
+    }
+}
