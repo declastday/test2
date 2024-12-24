@@ -1,0 +1,35 @@
+GUI만 있는 버스 시간표에 현재시간 갱신 기능 추가 v2
+
+public class Test2 {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Test2::createAndShowGUI);
+    }
+
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("버스 시간표");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 250);
+
+        JPanel panel = new JPanel(new GridLayout(6, 1));
+
+        JLabel currentTimeLabel = new JLabel("현재 시간: " + LocalTime.now().withNano(0));
+        JLabel nextBusLabel = new JLabel("다음 버스 시간: 없음");
+        JLabel secondNextBusLabel = new JLabel("다다음 버스 시간: 없음");
+
+        JButton dormitoryButton = new JButton("생활관");
+        JButton mainGateButton = new JButton("정문");
+        JButton refreshButton = new JButton("현재 시간 갱신");
+
+        refreshButton.addActionListener(e -> currentTimeLabel.setText("현재 시간: " + LocalTime.now().withNano(0)));
+
+        panel.add(currentTimeLabel);
+        panel.add(refreshButton);
+        panel.add(nextBusLabel);
+        panel.add(secondNextBusLabel);
+        panel.add(dormitoryButton);
+        panel.add(mainGateButton);
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+}
